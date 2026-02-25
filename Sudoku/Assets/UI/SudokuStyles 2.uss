@@ -1,0 +1,338 @@
+/* ============================================
+   SUDOKU UI TOOLKIT STYLESHEET
+   Minimalist / Flat — Unity 6
+   ============================================ */
+
+/* ── ROOT / BACKGROUND ─────────────────────── */
+.root {
+    flex-grow: 1;
+    background-color: rgb(245, 244, 240);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Subtle paper texture via layered pseudo-shadow boxes */
+.background-layer {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-color: rgb(245, 244, 240);
+}
+
+/* ── TITLE ─────────────────────────────────── */
+.title {
+    font-size: 36px;
+    color: rgb(40, 38, 35);
+    -unity-font-style: bold;
+    letter-spacing: 6px;
+    margin-bottom: 24px;
+    -unity-text-align: upper-center;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: rgb(160, 155, 148);
+    letter-spacing: 3px;
+    margin-bottom: 32px;
+    -unity-text-align: upper-center;
+}
+
+/* ── OUTER BOARD SHADOW CARD ───────────────── */
+.board-card {
+    background-color: rgb(255, 254, 252);
+    border-radius: 4px;
+    padding: 3px;
+
+    /* Layered box-shadow simulation via border */
+    border-width: 1px;
+    border-color: rgb(210, 207, 200);
+    
+    /* Drop shadow trick: outer wrapper */
+    margin: 8px;
+    
+    /* Subtle warm shadow */
+    translate: 0 0;
+}
+
+/* ── 9×9 GRID CONTAINER ────────────────────── */
+.grid {
+    width: 504px;
+    height: 504px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: rgb(60, 58, 55);  /* Grid line color */
+    border-width: 2px;
+    border-color: rgb(40, 38, 35);
+    border-radius: 2px;
+}
+
+/* ── CELL — BASE ───────────────────────────── */
+.cell {
+    width: 54px;
+    height: 54px;
+    background-color: rgb(255, 254, 252);
+    align-items: center;
+    justify-content: center;
+    
+    /* Thin inner lines */
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgb(210, 207, 200);
+
+    cursor: link;
+    transition-duration: 0.1s;
+    transition-property: background-color;
+}
+
+/* ── BOX BORDERS — 3×3 separators ─────────── */
+/* Right edge of col 3 and col 6 */
+.cell--box-right {
+    border-right-width: 2px;
+    border-right-color: rgb(40, 38, 35);
+}
+
+/* Bottom edge of row 3 and row 6 */
+.cell--box-bottom {
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(40, 38, 35);
+}
+
+/* ── CELL STATES ───────────────────────────── */
+.cell:hover {
+    background-color: rgb(235, 233, 228);
+}
+
+.cell--selected {
+    background-color: rgb(220, 235, 255);
+}
+
+.cell--selected:hover {
+    background-color: rgb(210, 228, 252);
+}
+
+/* Same row/col/box highlight */
+.cell--related {
+    background-color: rgb(238, 237, 232);
+}
+
+/* Given (pre-filled) clue cells */
+.cell--given {
+    background-color: rgb(248, 247, 244);
+    cursor: arrow;
+}
+
+/* Error state */
+.cell--error {
+    background-color: rgb(255, 235, 232);
+}
+
+.cell--error:hover {
+    background-color: rgb(252, 225, 222);
+}
+
+/* Soft highlight: same number */
+.cell--same-number {
+    background-color: rgb(210, 228, 252);
+}
+
+/* ── CELL NUMBER LABEL ─────────────────────── */
+.cell__number {
+    font-size: 22px;
+    color: rgb(30, 28, 26);
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+}
+
+.cell__number--given {
+    color: rgb(40, 38, 35);
+    -unity-font-style: bold;
+}
+
+.cell__number--player {
+    color: rgb(60, 100, 200);
+    -unity-font-style: normal;
+}
+
+.cell__number--error {
+    color: rgb(200, 50, 40);
+}
+
+/* ── PENCIL MARKS (small 3×3 grid inside cell) */
+.cell__pencil-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 2px;
+}
+
+.pencil-mark {
+    width: 33.33%;
+    height: 33.33%;
+    font-size: 9px;
+    color: rgb(130, 128, 124);
+    -unity-text-align: middle-center;
+}
+
+/* ── NUMPAD ────────────────────────────────── */
+.numpad {
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.numpad__btn {
+    width: 48px;
+    height: 56px;
+    margin: 4px;
+    background-color: rgb(255, 254, 252);
+    border-width: 1px;
+    border-color: rgb(210, 207, 200);
+    border-radius: 4px;
+    font-size: 20px;
+    color: rgb(40, 38, 35);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    cursor: link;
+    transition-duration: 0.1s;
+    transition-property: background-color, translate;
+}
+
+.numpad__btn:hover {
+    background-color: rgb(235, 233, 228);
+    translate: 0 -1px;
+}
+
+.numpad__btn:active {
+    background-color: rgb(220, 218, 212);
+    translate: 0 0;
+}
+
+.numpad__btn--erase {
+    font-size: 14px;
+    color: rgb(160, 80, 70);
+    letter-spacing: 1px;
+}
+
+/* ── CONTROL BUTTONS ───────────────────────── */
+.controls {
+    flex-direction: row;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.ctrl-btn {
+    height: 36px;
+    padding: 0 20px;
+    margin: 4px;
+    background-color: transparent;
+    border-width: 1px;
+    border-color: rgb(190, 187, 180);
+    border-radius: 3px;
+    font-size: 11px;
+    color: rgb(100, 97, 92);
+    letter-spacing: 2px;
+    -unity-text-align: middle-center;
+    cursor: link;
+    transition-duration: 0.1s;
+    transition-property: background-color, border-color, color;
+}
+
+.ctrl-btn:hover {
+    background-color: rgb(235, 233, 228);
+    border-color: rgb(140, 137, 132);
+    color: rgb(40, 38, 35);
+}
+
+.ctrl-btn--primary {
+    background-color: rgb(40, 38, 35);
+    border-color: rgb(40, 38, 35);
+    color: rgb(245, 244, 240);
+}
+
+.ctrl-btn--primary:hover {
+    background-color: rgb(65, 62, 58);
+    border-color: rgb(65, 62, 58);
+    color: rgb(255, 254, 252);
+}
+
+/* ── DIFFICULTY BADGE ──────────────────────── */
+.difficulty-badge {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgb(160, 155, 148);
+    -unity-text-align: upper-center;
+    margin-bottom: 12px;
+}
+
+/* ── TIMER ─────────────────────────────────── */
+.timer {
+    font-size: 13px;
+    color: rgb(120, 117, 112);
+    letter-spacing: 2px;
+    -unity-text-align: upper-center;
+    margin-top: 14px;
+}
+
+/* ── MISTAKE COUNTER ───────────────────────── */
+.mistakes {
+    font-size: 11px;
+    color: rgb(180, 80, 70);
+    letter-spacing: 1px;
+    -unity-text-align: upper-center;
+    margin-top: 4px;
+}
+
+/* ── DIFFICULTY BADGE — tıklanabilir ───────── */
+.difficulty-badge--clickable {
+    cursor: link;
+    padding: 4px 12px;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgb(210, 207, 200);
+    transition-duration: 0.1s;
+    transition-property: background-color, border-color;
+}
+
+.difficulty-badge--clickable:hover {
+    background-color: rgb(235, 233, 228);
+    border-color: rgb(160, 155, 148);
+}
+
+/* ── DIFFICULTY MENU — yatay ───────────────── */
+.difficulty-menu {
+    flex-direction: row;
+    background-color: rgb(255, 254, 252);
+    border-width: 1px;
+    border-color: rgb(210, 207, 200);
+    border-radius: 20px;
+    padding: 3px;
+    margin-bottom: 8px;
+}
+
+.difficulty-menu__item {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgb(140, 137, 132);
+    padding: 5px 16px;
+    border-radius: 16px;
+    -unity-text-align: middle-center;
+    cursor: link;
+    transition-duration: 0.12s;
+    transition-property: background-color, color;
+}
+
+.difficulty-menu__item:hover {
+    color: rgb(40, 38, 35);
+    background-color: rgb(238, 237, 232);
+}
+
+.difficulty-menu__item--active {
+    background-color: rgb(40, 38, 35);
+    color: rgb(245, 244, 240);
+    -unity-font-style: bold;
+}
+
+.difficulty-menu__item--active:hover {
+    background-color: rgb(65, 62, 58);
+}
