@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/SudokuStyles%202.uss?fileID=7433441132597879392&amp;guid=76741752fec3870488be2afe4fdd04b1&amp;type=3#SudokuStyles 2"/>
+    <Style src="project://database/Assets/UI/SudokuStyles%20(2).uss?fileID=7433441132597879392&amp;guid=dc772074ab1e0c14ca63497de6f3e769&amp;type=3#SudokuStyles (2)"/>
     <ui:VisualElement name="Root" class="root">
         <ui:VisualElement name="BackgroundLayer" picking-mode="Ignore" class="background-layer"/>
         <ui:Label name="Title" text="SUDOKU" class="title"/>
