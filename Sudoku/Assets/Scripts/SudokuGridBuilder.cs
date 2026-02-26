@@ -30,7 +30,6 @@ public class SudokuGridBuilder : MonoBehaviour
 
     // Zorluk
     private Difficulty _currentDifficulty = Difficulty.Medium;
-    private Label _difficultyLabel;
     private VisualElement _difficultyMenu;
 
     // ── Awake ───────────────────────────────────────────────
@@ -156,40 +155,29 @@ public class SudokuGridBuilder : MonoBehaviour
     // ══════════════════════════════════════════════════════════
     private void BuildDifficultyMenu()
     {
-        _difficultyLabel = _root.Q<Label>("DifficultyBadge");
+        // UXML'den elementleri bul
+        _difficultyMenu = _root.Q<VisualElement>("DifficultyMenu");
+        if (_difficultyMenu == null) return;
 
-        // Pill tab — her zaman görünür, tıklamaya gerek yok
-        _difficultyMenu = new VisualElement();
-        _difficultyMenu.AddToClassList("difficulty-menu");
-
-        string[] labels = { "EASY", "MEDIUM", "HARD" };
+        string[] labels = { "Easy", "Medium", "Hard" };
         Difficulty[] diffs = { Difficulty.Easy, Difficulty.Medium, Difficulty.Hard };
+        string[] names = { "DiffBtn_Easy", "DiffBtn_Medium", "DiffBtn_Hard" };
 
         for (int i = 0; i < 3; i++)
         {
             int ci = i;
-            var item = new Label(labels[i]);
-            item.AddToClassList("difficulty-menu__item");
-            if (diffs[i] == _currentDifficulty)
-                item.AddToClassList("difficulty-menu__item--active");
+            var item = _root.Q<Label>(names[i]);
+            if (item == null) continue;
 
             item.RegisterCallback<ClickEvent>(_ => SelectDifficulty(diffs[ci], item));
-            _difficultyMenu.Add(item);
         }
-
-        _difficultyLabel.parent.Insert(
-            _difficultyLabel.parent.IndexOf(_difficultyLabel) + 1,
-            _difficultyMenu
-        );
     }
 
     private void SelectDifficulty(Difficulty d, Label selectedItem)
     {
         _currentDifficulty = d;
 
-        if (_difficultyLabel != null)
-            _difficultyLabel.text = d.ToString().ToUpper();
-
+        // Active class'ı güncelle
         foreach (var child in _difficultyMenu.Children())
             child.RemoveFromClassList("difficulty-menu__item--active");
         selectedItem?.AddToClassList("difficulty-menu__item--active");

@@ -1,9 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/SudokuStyles%20(2).uss?fileID=7433441132597879392&amp;guid=dc772074ab1e0c14ca63497de6f3e769&amp;type=3#SudokuStyles (2)"/>
+    <Style src="project://database/Assets/UI/SudokuStyles%20(3).uss?fileID=7433441132597879392&amp;guid=06d50f5d1311c9c46a3d8a7ae31f335c&amp;type=3#SudokuStyles (3)"/>
     <ui:VisualElement name="Root" class="root">
         <ui:VisualElement name="BackgroundLayer" picking-mode="Ignore" class="background-layer"/>
         <ui:Label name="Title" text="SUDOKU" class="title"/>
-        <ui:Label name="DifficultyBadge" text="MEDIUM" class="difficulty-badge"/>
+        <ui:VisualElement name="DifficultyMenu" class="difficulty-menu">
+            <ui:Label name="DiffBtn_Easy" text="EASY" class="difficulty-menu__item"/>
+            <ui:Label name="DiffBtn_Medium" text="MEDIUM" class="difficulty-menu__item difficulty-menu__item--active"/>
+            <ui:Label name="DiffBtn_Hard" text="HARD" class="difficulty-menu__item"/>
+        </ui:VisualElement>
         <ui:VisualElement name="BoardCard" class="board-card">
             <ui:VisualElement name="GridContainer" class="grid"/>
         </ui:VisualElement>

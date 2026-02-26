@@ -297,7 +297,7 @@
 .difficulty-menu {
     flex-direction: row;
     background-color: rgb(228, 226, 220);
-    border-radius: 999px;
+    border-radius: 6px;
     padding: 4px;
     margin-bottom: 12px;
 }
@@ -307,7 +307,7 @@
     letter-spacing: 2px;
     color: rgb(140, 137, 132);
     padding: 6px 20px;
-    border-radius: 999px;
+    border-radius: 4px;
     -unity-text-align: middle-center;
     transition-duration: 0.15s;
     transition-property: background-color, color;
