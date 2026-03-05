@@ -200,6 +200,7 @@ public class SudokuGridBuilder : MonoBehaviour
 
         _cells[index].AddToClassList("cell--selected");
 
+        // İlgili satır, sütun ve bloğu vurgula
         for (int i = 0; i < 81; i++)
         {
             if (i == index) continue;
@@ -207,6 +208,18 @@ public class SudokuGridBuilder : MonoBehaviour
             int b = (r / 3) * 3 + (c / 3);
             if (r == selRow || c == selCol || b == selBox)
                 _cells[i].AddToClassList("cell--related");
+        }
+
+        // YENİ EKLENEN KISIM: 
+        // Eğer tıklanan hücrede halihazırda bir sayı varsa, o sayıları da vurgula.
+        string clickedNumber = _cellLabels[index].text;
+        if (!string.IsNullOrEmpty(clickedNumber))
+        {
+            // Parse etmeye gerek yok, zaten string olarak karşılaştırıyoruz
+            if (int.TryParse(clickedNumber, out int num))
+            {
+                HighlightSameNumbers(num);
+            }
         }
     }
 

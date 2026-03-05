@@ -1,107 +1,147 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class MatrisCreater : MonoBehaviour
 {
-
     public SudokuGridBuilder uiBuilder;
 
-    List<int> pool = new List<int>{1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-    int[,] grid = new int[9, 9];
-
+    List<int> pool;
+    int[,] grid;
 
     void Start()
     {
-        //ilk satır
-        //Array.Copy(pool.OrderBy(x => UnityEngine.Random.value).ToArray(), 0, grid, 0, 9); hata verdi o yüzden aşağıdakini kullandım
+        GenerateMatris();
+        uiBuilder.LoadMatrixToUI(grid);
+    }
 
-        Buffer.BlockCopy(pool.OrderBy(x => UnityEngine.Random.value).ToArray(), 0, grid, 0, 9 * sizeof(int));
+    private void GenerateMatris()
+    {
+        bool isSuccessful = false;
 
-        pool = pool.OrderBy(x => UnityEngine.Random.value).ToList();
-
-        //ilk sütun
-        pool.Remove(grid[0, 0]);
-
-        for (int i = 1; i < 9; i++)
+        while (!isSuccessful)
         {
-            int randomIndex = UnityEngine.Random.Range(0, pool.Count);
+            isSuccessful = true;
+            pool = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            grid = new int[9, 9];
 
-            grid[i, 0] = pool[randomIndex];
+            FillFirstRow();
 
-            pool.RemoveAt(randomIndex);
+            isSuccessful = NavigateBlocks();
         }
+    }
 
- 
+    private void FillFirstRow()
+    {
+        //ilk satır
+        Buffer.BlockCopy(pool.OrderBy(x => UnityEngine.Random.value).ToArray(), 0, grid, 0, 9 * sizeof(int));
+    }
 
+    private bool NavigateBlocks()
+    {
+        int maxRetries = 50;
 
-
-
-        
-        for (int satir = 0; satir < 9; satir+=3)
+        for (int blockRow = 0; blockRow < 9; blockRow += 3)
         {
-            for (int sutun = 0; sutun < 9; sutun += 3)
+            for (int blockCol = 0; blockCol < 9; blockCol += 3)
             {
+                bool blockSuccessful = false;
+                int retries = 0;
 
-                pool = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-                for (int icSatir = 0; icSatir < 3; icSatir ++)
+                while (!blockSuccessful && retries < maxRetries)
                 {
-                    for (int icSutun = 0; icSutun < 3; icSutun++)
+                    blockSuccessful = true;
+                    retries++;
+
+                    if (retries > 1)
                     {
-                        
-                        int row = satir+icSatir;
-                        int col = sutun+icSutun;
-                        int deger = grid[row,col];
+                        ClearBlockCells(blockRow, blockCol);
+                    }
 
-                        if (deger!=0)
+                    pool = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+                    for (int innerRow = 0; innerRow < 3 && blockSuccessful; innerRow++)
+                    {
+                        for (int innerCol = 0; innerCol < 3 && blockSuccessful; innerCol++)
                         {
-                            pool.Remove(deger);
-                        }
-                        else
-                        {
-                            // GEÇİCİ ÇIKARTMA YÖNTEMİ
-                            List<int> buHucredeSilinenler = new List<int>();
+                            int row = blockRow + innerRow;
+                            int col = blockCol + innerCol;
 
-                            // O anki satır ve sütundaki sayıları havuzdan geçici olarak çıkart
-                            for (int k = 0; k < 9; k++)
-                            {
-                                int satirDegeri = grid[row, k];
-                                int sutunDegeri = grid[k, col];
-
-                                if (pool.Remove(satirDegeri)) buHucredeSilinenler.Add(satirDegeri);
-                                if (pool.Remove(sutunDegeri)) buHucredeSilinenler.Add(sutunDegeri);
-                            }
-
-                            // KRİTİK: Havuzda sayı kaldıysa seç (Index out of range koruması)
-                            if (pool.Count > 0)
-                            {
-                                int randomIndex = UnityEngine.Random.Range(0, pool.Count);
-                                int secilen = pool[randomIndex];
-
-                                grid[row, col] = secilen;
-
-                                // Seçtiğimiz sayıyı 3x3 havuzundan KALICI olarak sil
-                                pool.RemoveAt(randomIndex);
-                            }
-
-                            // GERİ EKLEME: Geçici olarak sildiğimiz tüm sayıları havuza geri koy
-                            foreach (int geriGelen in buHucredeSilinenler)
-                            {
-                                // Sadece havuzda yoksa ekle (kopya oluşmasın diye)
-                                if (!pool.Contains(geriGelen))
-                                    pool.Add(geriGelen);
-                            }
+                            blockSuccessful = CheckAndFillCell(row, col);
                         }
                     }
+                }
+
+                if (!blockSuccessful)
+                {
+                    return false;
                 }
             }
         }
 
-        uiBuilder.LoadMatrixToUI(grid);
+        return true;
+    }
 
+    private void ClearBlockCells(int blockRow, int blockCol)
+    {
+        for (int innerRow = 0; innerRow < 3; innerRow++)
+        {
+            for (int innerCol = 0; innerCol < 3; innerCol++)
+            {
+                int row = blockRow + innerRow;
+                int col = blockCol + innerCol;
+                if (row != 0)
+                {
+                    grid[row, col] = 0;
+                }
+            }
+        }
+    }
 
-    } 
+    private bool CheckAndFillCell(int row, int col)
+    {
+        int cellValue = grid[row, col];
+
+        if (cellValue != 0)
+        {
+            pool.Remove(cellValue);
+            return true;
+        }
+        else
+        {
+            List<int> removedForThisCell = new List<int>();
+
+            for (int k = 0; k < 9; k++)
+            {
+                int rowValue = grid[row, k];
+                int colValue = grid[k, col];
+
+                if (pool.Remove(rowValue)) removedForThisCell.Add(rowValue);
+                if (pool.Remove(colValue)) removedForThisCell.Add(colValue);
+            }
+
+            if (pool.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, pool.Count);
+                int selectedNumber = pool[randomIndex];
+
+                grid[row, col] = selectedNumber;
+
+                pool.RemoveAt(randomIndex);
+            }
+            else
+            {
+                return false;
+            }
+
+            foreach (int restoredNumber in removedForThisCell)
+            {
+                if (!pool.Contains(restoredNumber))
+                    pool.Add(restoredNumber);
+            }
+
+            return true;
+        }
+    }
 }

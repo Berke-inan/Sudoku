@@ -94,42 +94,52 @@
     border-bottom-color: rgb(40, 38, 35);
 }
 
-/* ── CELL STATES ───────────────────────────── */
+/* ── CELL STATES (GÜNCELLENEN KISIM) ───────── */
+
+/* 1. Normal Hover (Sadece boş ve sıradan hücrelerde) */
 .cell:hover {
     background-color: rgb(235, 233, 228);
 }
 
-.cell--selected {
-    background-color: rgb(220, 235, 255);
-}
-
-.cell--selected:hover {
-    background-color: rgb(210, 228, 252);
-}
-
-/* Same row/col/box highlight */
-.cell--related {
-    background-color: rgb(238, 237, 232);
-}
-
-/* Given (pre-filled) clue cells */
+/* 2. Given (Pre-filled) clue cells */
+/* Sadece standart durumlarını belirler, diğer kurallar bunu ezebilir */
 .cell--given {
     background-color: rgb(248, 247, 244);
 }
 
-/* Error state */
-.cell--error {
+/* 3. Error state */
+.cell--error,
+.cell--given.cell--error {
     background-color: rgb(255, 235, 232);
 }
 
-.cell--error:hover {
+.cell--error:hover,
+.cell--given.cell--error:hover {
     background-color: rgb(252, 225, 222);
 }
 
-/* Soft highlight: same number */
-.cell--same-number {
-    background-color: rgb(210, 228, 252);
+/* 4. Same row/col/box highlight (Boş ve Dolu hücreler için geçerli) */
+/* Rengini biraz belirginleştirdim ki gri tonuyla karışmasın */
+.cell.cell--related, 
+.cell--given.cell--related {
+    background-color: rgb(230, 228, 222); 
 }
+
+/* 5. Soft highlight: same number (Açık Mavi) */
+/* Dolu hücrelerde de açık mavi olmasını garantiler */
+.cell.cell--same-number, 
+.cell--given.cell--same-number {
+    background-color: rgb(210, 228, 252); 
+}
+
+/* 6. Asıl Tıklanan Hücre (En yüksek öncelik, Koyu Mavi kalır) */
+/* En altta tanımlandığı için yukarıdaki tüm kuralları (given, related vs) ezer */
+.cell.cell--selected, 
+.cell--given.cell--selected {
+    background-color: rgb(160, 200, 255); 
+}
+
+/* ──────────────────────────────────────────── */
 
 /* ── CELL NUMBER LABEL ─────────────────────── */
 .cell__number {
