@@ -128,7 +128,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 348240417}
-  - component: {fileID: 348240416}
+  - component: {fileID: 348240419}
+  - component: {fileID: 348240418}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -136,19 +137,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &348240416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 348240415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0438364fd6e7764f9fa094cba0ad55e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MatrisCreater
-  uiBuilder: {fileID: 1120224688}
 --- !u!4 &348240417
 Transform:
   m_ObjectHideFlags: 0
@@ -164,6 +152,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &348240418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348240415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0438364fd6e7764f9fa094cba0ad55e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MatrisCreater
+  uiBuilder: {fileID: 1120224688}
+--- !u!114 &348240419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348240415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d33a948c9fcd3246b63ed6f6cece283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  matrisCreater: {fileID: 348240418}
+  uiBuilder: {fileID: 1120224688}
 --- !u!1 &1120224684
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,6 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SudokuGridBuilder
   uiDocument: {fileID: 1120224685}
+  gameManager: {fileID: 348240419}
 --- !u!1 &1174130235
 GameObject:
   m_ObjectHideFlags: 0

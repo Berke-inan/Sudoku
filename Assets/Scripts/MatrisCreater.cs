@@ -12,11 +12,10 @@ public class MatrisCreater : MonoBehaviour
 
     void Start()
     {
-        GenerateMatris();
-        uiBuilder.LoadMatrixToUI(grid);
+       GenerateMatris();
     }
 
-    private void GenerateMatris()
+    public void GenerateMatris()
     {
         bool isSuccessful = false;
 
@@ -30,6 +29,11 @@ public class MatrisCreater : MonoBehaviour
 
             isSuccessful = NavigateBlocks();
         }
+    }
+
+    public int[,] GetGrid()
+    {
+        return grid;
     }
 
     private void FillFirstRow()

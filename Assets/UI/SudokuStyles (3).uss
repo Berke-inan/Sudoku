@@ -36,6 +36,8 @@
     -unity-text-align: upper-center;
 }
 
+
+
 /* ── OUTER BOARD SHADOW CARD ───────────────── */
 .board-card {
     background-color: rgb(255, 254, 252);
@@ -161,6 +163,10 @@
 
 .cell__number--error {
     color: rgb(200, 50, 40);
+}
+
+.cell__number--hint {
+    color: rgb(120, 80, 200); /* Mor tonlarında */
 }
 
 /* ── PENCIL MARKS (small 3×3 grid inside cell) */
