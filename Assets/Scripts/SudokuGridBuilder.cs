@@ -40,7 +40,7 @@ public class SudokuGridBuilder : MonoBehaviour
     }
 
     // ── Start ───────────────────────────────────────────────
-    private void Start()
+    private void OnEnable()
     {
         var docRoot = uiDocument.rootVisualElement;
         _root = docRoot.Q("Root") ?? docRoot;
@@ -286,6 +286,26 @@ public class SudokuGridBuilder : MonoBehaviour
         _cells[index].AddToClassList("cell--given");
         _cellLabels[index].AddToClassList("cell__number--given");
         _cellLabels[index].RemoveFromClassList("cell__number--player");
+    }
+
+    public void LoadMatrixToUI(int[,] matrix)
+    {
+        ClearAllCells(); // Eski verileri temizleyip sıfır bir tahta açar
+
+        for (int r = 0; r < 9; r++)
+        {
+            for (int c = 0; c < 9; c++)
+            {
+                int number = matrix[r, c];
+
+                // Eğer hücrede 0 varsa (boşsa) atla, sayı varsa ekrana yaz
+                if (number != 0)
+                {
+                    int flatIndex = (r * 9) + c;
+                    SetGivenCell(flatIndex, number);
+                }
+            }
+        }
     }
 
     public void SetPlayerCell(int index, int number, bool isError)
