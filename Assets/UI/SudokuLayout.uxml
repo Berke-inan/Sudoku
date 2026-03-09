@@ -15,6 +15,7 @@
         <ui:VisualElement name="ControlsContainer" class="controls">
             <ui:Button name="BtnNewGame" text="NEW GAME" class="ctrl-btn ctrl-btn--primary"/>
             <ui:Button name="BtnHint" text="HINT" class="ctrl-btn"/>
+            <ui:Button name="BtnPause" text="PAUSE" class="ctrl-btn"/>
         </ui:VisualElement>
         <ui:Label name="TimerLabel" text="00:00" class="timer"/>
         <ui:Label name="MistakesLabel" text="" class="mistakes"/>

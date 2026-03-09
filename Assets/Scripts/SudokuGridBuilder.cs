@@ -19,6 +19,10 @@ public class SudokuGridBuilder : MonoBehaviour
     private VisualElement _numpadContainer;
     private Label _timerLabel;
     private Label _mistakesLabel;
+    private Button _hintButton;
+    private int _remainingHints = 3;
+    private bool _isPaused = false;
+    private VisualElement _pauseOverlay;
 
     private readonly VisualElement[] _cells = new VisualElement[81];
     private readonly Label[] _cellLabels = new Label[81];
@@ -123,7 +127,30 @@ public class SudokuGridBuilder : MonoBehaviour
     private void BindControlButtons()
     {
         _root.Q<Button>("BtnNewGame")?.RegisterCallback<ClickEvent>(_ => OnNewGame());
-        _root.Q<Button>("BtnHint")?.RegisterCallback<ClickEvent>(_ => OnHint());
+        _root.Q<Button>("BtnPause")?.RegisterCallback<ClickEvent>(_ => TogglePause());
+
+        // Hint butonunu bul ve yeni metoda bağla
+        _hintButton = _root.Q<Button>("BtnHint");
+        if (_hintButton != null)
+        {
+            _hintButton.RegisterCallback<ClickEvent>(_ => OnHintOrSolveClicked());
+        }
+    }
+
+    private void OnHintOrSolveClicked()
+    {
+        if (_remainingHints > 0)
+        {
+            gameManager.GiveHint();
+        }
+        else
+        {
+            // Hint hakkı bittiyse onay ekranı çıkart
+            ShowConfirmationDialog("Bulmacayı otomatik çözmek istediğinize emin misiniz?", () =>
+            {
+                gameManager.SolvePuzzle();
+            });
+        }
     }
 
     private void BuildDifficultyMenu()
@@ -140,6 +167,21 @@ public class SudokuGridBuilder : MonoBehaviour
             var item = _root.Q<Label>(names[i]);
             if (item == null) continue;
             item.RegisterCallback<ClickEvent>(_ => SelectDifficulty(diffs[ci], item));
+        }
+    }
+
+    public void UpdateHintUI(int hintsLeft)
+    {
+        _remainingHints = hintsLeft;
+        if (_hintButton == null) return;
+
+        if (hintsLeft > 0)
+        {
+            _hintButton.text = $"HINT ({hintsLeft})";
+        }
+        else
+        {
+            _hintButton.text = "SOLVE";
         }
     }
 
@@ -223,6 +265,8 @@ public class SudokuGridBuilder : MonoBehaviour
 
     private void OnCellClicked(int index)
     {
+        if (_isPaused) return;
+
         if (_selectedIndex == index) { ClearSelection(); return; }
         ClearHighlights();
         _selectedIndex = index;
@@ -244,9 +288,63 @@ public class SudokuGridBuilder : MonoBehaviour
         if (!string.IsNullOrEmpty(clickedNumber) && int.TryParse(clickedNumber, out int num))
             HighlightSameNumbers(num);
     }
+    private void TogglePause()
+    {
+        if (_isPaused) ResumeGame();
+        else PauseGame();
+    }
+
+    private void ResumeGame()
+    {
+        _isPaused = false;
+        _timerRunning = true; // Zamanı devam ettir
+
+        // Menüyü ekrandan kaldır
+        if (_pauseOverlay != null && _root.Contains(_pauseOverlay))
+        {
+            _root.Remove(_pauseOverlay);
+        }
+    }
+    private void PauseGame()
+    {
+        _isPaused = true;
+        _timerRunning = false; // Zamanı durdur
+
+        // Yarı saydam arka planı ve menü kutusunu oluştur
+        _pauseOverlay = CreateOverlay();
+        var box = CreateDialogBox();
+
+        // Başlık
+        var title = new Label("PAUSED");
+        title.style.color = new StyleColor(new Color(0.2f, 0.2f, 0.2f, 1f));
+        title.style.fontSize = 45;
+        title.style.unityFontStyleAndWeight = FontStyle.Bold;
+        title.style.marginBottom = 40;
+
+        // Devam Et Butonu
+        var btnResume = new Button(() => ResumeGame()) { text = "RESUME" };
+        btnResume.style.width = 300; btnResume.style.height = 80; btnResume.style.marginBottom = 20;
+        btnResume.style.backgroundColor = new StyleColor(new Color(0.15f, 0.15f, 0.15f, 1f));
+        btnResume.style.color = new StyleColor(Color.white); btnResume.style.fontSize = 28;
+
+        // Yeniden Başlat Butonu
+        var btnRestart = new Button(() => { ResumeGame(); OnNewGame(); }) { text = "RESTART" };
+        btnRestart.style.width = 300; btnRestart.style.height = 80;
+        btnRestart.style.backgroundColor = new StyleColor(new Color(0.8f, 0.2f, 0.2f, 1f)); // Kırmızımsı ton
+        btnRestart.style.color = new StyleColor(Color.white); btnRestart.style.fontSize = 28;
+
+        box.Add(title);
+        box.Add(btnResume);
+        box.Add(btnRestart);
+
+        _pauseOverlay.Add(box);
+        _root.Add(_pauseOverlay);
+    }
 
     private void OnNumpadPressed(int number)
     {
+
+        if (_isPaused) return;
         if (_selectedIndex < 0) return;
 
         // Başlangıç sayıları silinemez/değiştirilemez

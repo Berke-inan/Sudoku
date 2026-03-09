@@ -1,6 +1,6 @@
 /* ============================================
    SUDOKU UI TOOLKIT STYLESHEET
-   Minimalist / Flat — Unity 6
+   Minimalist / Flat — Unity 6 (BÜYÜK KONTROLLER & 5x2 NUMPAD)
    ============================================ */
 
 /* ── ROOT / BACKGROUND ─────────────────────── */
@@ -11,7 +11,6 @@
     justify-content: center;
 }
 
-/* Subtle paper texture via layered pseudo-shadow boxes */
 .background-layer {
     position: absolute;
     left: 0; top: 0; right: 0; bottom: 0;
@@ -20,96 +19,79 @@
 
 /* ── TITLE ─────────────────────────────────── */
 .title {
-    font-size: 36px;
+    font-size: 64px; 
     color: rgb(40, 38, 35);
     -unity-font-style: bold;
-    letter-spacing: 6px;
-    margin-bottom: 24px;
+    letter-spacing: 10px;
+    margin-bottom: 25px;
     -unity-text-align: upper-center;
 }
 
 .subtitle {
-    font-size: 11px;
+    font-size: 20px;
     color: rgb(160, 155, 148);
-    letter-spacing: 3px;
-    margin-bottom: 32px;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
     -unity-text-align: upper-center;
 }
-
-
 
 /* ── OUTER BOARD SHADOW CARD ───────────────── */
 .board-card {
     background-color: rgb(255, 254, 252);
-    border-radius: 4px;
-    padding: 3px;
-
-    /* Layered box-shadow simulation via border */
-    border-width: 1px;
+    border-radius: 8px;
+    padding: 6px;
+    border-width: 2px;
     border-color: rgb(210, 207, 200);
-    
-    /* Drop shadow trick: outer wrapper */
-    margin: 8px;
-    
-    /* Subtle warm shadow */
+    margin: 16px;
     translate: 0 0;
 }
 
 /* ── 9×9 GRID CONTAINER ────────────────────── */
 .grid {
-    width: 504px;
-    height: 504px;
+    width: 1020px; 
+    height: 1020px; 
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: rgb(60, 58, 55);  /* Grid line color */
-    border-width: 2px;
+    background-color: rgb(60, 58, 55); 
+    border-width: 4px;
     border-color: rgb(40, 38, 35);
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
-/* ── CELL — BASE ───────────────────────────── */
+/* ── CELL — BASE ────────── */
 .cell {
-    width: 54px;
-    height: 54px;
+    width: 11.11%; 
+    height: 11.11%;
     background-color: rgb(255, 254, 252);
     align-items: center;
     justify-content: center;
-    
-    /* Thin inner lines */
-    border-right-width: 1px;
-    border-bottom-width: 1px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
     border-color: rgb(210, 207, 200);
     transition-duration: 0.1s;
     transition-property: background-color;
 }
 
 /* ── BOX BORDERS — 3×3 separators ─────────── */
-/* Right edge of col 3 and col 6 */
 .cell--box-right {
-    border-right-width: 2px;
+    border-right-width: 4px;
     border-right-color: rgb(40, 38, 35);
 }
 
-/* Bottom edge of row 3 and row 6 */
 .cell--box-bottom {
-    border-bottom-width: 2px;
+    border-bottom-width: 4px;
     border-bottom-color: rgb(40, 38, 35);
 }
 
-/* ── CELL STATES (GÜNCELLENEN KISIM) ───────── */
-
-/* 1. Normal Hover (Sadece boş ve sıradan hücrelerde) */
+/* ── CELL STATES ───────────────────────────── */
 .cell:hover {
     background-color: rgb(235, 233, 228);
 }
 
-/* 2. Given (Pre-filled) clue cells */
-/* Sadece standart durumlarını belirler, diğer kurallar bunu ezebilir */
 .cell--given {
     background-color: rgb(248, 247, 244);
 }
 
-/* 3. Error state */
 .cell--error,
 .cell--given.cell--error {
     background-color: rgb(255, 235, 232);
@@ -120,32 +102,24 @@
     background-color: rgb(252, 225, 222);
 }
 
-/* 4. Same row/col/box highlight (Boş ve Dolu hücreler için geçerli) */
-/* Rengini biraz belirginleştirdim ki gri tonuyla karışmasın */
 .cell.cell--related, 
 .cell--given.cell--related {
     background-color: rgb(230, 228, 222); 
 }
 
-/* 5. Soft highlight: same number (Açık Mavi) */
-/* Dolu hücrelerde de açık mavi olmasını garantiler */
 .cell.cell--same-number, 
 .cell--given.cell--same-number {
     background-color: rgb(210, 228, 252); 
 }
 
-/* 6. Asıl Tıklanan Hücre (En yüksek öncelik, Koyu Mavi kalır) */
-/* En altta tanımlandığı için yukarıdaki tüm kuralları (given, related vs) ezer */
 .cell.cell--selected, 
 .cell--given.cell--selected {
     background-color: rgb(160, 200, 255); 
 }
 
-/* ──────────────────────────────────────────── */
-
 /* ── CELL NUMBER LABEL ─────────────────────── */
 .cell__number {
-    font-size: 22px;
+    font-size: 52px; 
     color: rgb(30, 28, 26);
     -unity-text-align: middle-center;
     -unity-font-style: bold;
@@ -166,43 +140,46 @@
 }
 
 .cell__number--hint {
-    color: rgb(120, 80, 200); /* Mor tonlarında */
+    color: rgb(120, 80, 200);
 }
 
-/* ── PENCIL MARKS (small 3×3 grid inside cell) */
+/* ── PENCIL MARKS ──────────────────────────── */
 .cell__pencil-container {
     position: absolute;
     width: 100%;
     height: 100%;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 2px;
+    padding: 4px;
 }
 
 .pencil-mark {
     width: 33.33%;
     height: 33.33%;
-    font-size: 9px;
+    font-size: 18px; 
     color: rgb(130, 128, 124);
     -unity-text-align: middle-center;
 }
 
-/* ── NUMPAD ────────────────────────────────── */
+/* ── NUMPAD (TAM 5'E 5 BÖLÜNMESİ İÇİN AYARLANDI) ──────── */
 .numpad {
+    width: 1020px; /* Grid ile tam aynı hizada */
     flex-direction: row;
-    margin-top: 20px;
+    flex-wrap: wrap; 
+    margin-top: 25px;
     justify-content: center;
 }
 
 .numpad__btn {
-    width: 48px;
-    height: 56px;
-    margin: 4px;
+    /* 1020px içine tam 5 adet sığacak ve 6. mecburen aşağı inecek ölçüler */
+    width: 160px; 
+    height: 130px; 
+    margin: 15px; /* (160 + 30) * 5 = 950px kaplar, tam sığar */
     background-color: rgb(255, 254, 252);
-    border-width: 1px;
+    border-width: 2px;
     border-color: rgb(210, 207, 200);
-    border-radius: 4px;
-    font-size: 20px;
+    border-radius: 12px;
+    font-size: 60px; 
     color: rgb(40, 38, 35);
     -unity-font-style: bold;
     -unity-text-align: middle-center;
@@ -212,7 +189,7 @@
 
 .numpad__btn:hover {
     background-color: rgb(235, 233, 228);
-    translate: 0 -1px;
+    translate: 0 -3px;
 }
 
 .numpad__btn:active {
@@ -221,29 +198,31 @@
 }
 
 .numpad__btn--erase {
-    font-size: 14px;
+    font-size: 40px; 
     color: rgb(160, 80, 70);
     letter-spacing: 1px;
 }
 
-/* ── CONTROL BUTTONS ───────────────────────── */
+/* ── CONTROL BUTTONS (NEW GAME, HINT, PAUSE) ───────────────────────── */
 .controls {
     flex-direction: row;
-    margin-top: 16px;
+    flex-wrap: wrap; /* Butonlar çoğaldığında sığması için eklendi */
+    margin-top: 25px;
     justify-content: center;
+    width: 1020px;
 }
 
 .ctrl-btn {
-    height: 36px;
-    padding: 0 20px;
-    margin: 4px;
+    height: 100px; /* Bayağı büyütüldü (eski 80px) */
+    padding: 0 50px; /* Genişlik artırıldı */
+    margin: 15px;
     background-color: transparent;
-    border-width: 1px;
+    border-width: 3px; /* Çerçeveler kalınlaştırıldı */
     border-color: rgb(190, 187, 180);
-    border-radius: 3px;
-    font-size: 11px;
+    border-radius: 12px;
+    font-size: 32px; /* Yazılar iyice belirginleşti */
     color: rgb(100, 97, 92);
-    letter-spacing: 2px;
+    letter-spacing: 4px;
     -unity-text-align: middle-center;
     transition-duration: 0.1s;
     transition-property: background-color, border-color, color;
@@ -267,63 +246,21 @@
     color: rgb(255, 254, 252);
 }
 
-/* ── DIFFICULTY BADGE ──────────────────────── */
-.difficulty-badge {
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: rgb(160, 155, 148);
-    -unity-text-align: upper-center;
-    margin-bottom: 12px;
-}
-
-/* ── TIMER ─────────────────────────────────── */
-.timer {
-    font-size: 13px;
-    color: rgb(120, 117, 112);
-    letter-spacing: 2px;
-    -unity-text-align: upper-center;
-    margin-top: 14px;
-}
-
-/* ── MISTAKE COUNTER ───────────────────────── */
-.mistakes {
-    font-size: 11px;
-    color: rgb(180, 80, 70);
-    letter-spacing: 1px;
-    -unity-text-align: upper-center;
-    margin-top: 4px;
-}
-
-/* ── DIFFICULTY BADGE — tıklanabilir ───────── */
-.difficulty-badge--clickable {
-    padding: 4px 12px;
-    border-radius: 10px;
-    border-width: 1px;
-    border-color: rgb(210, 207, 200);
-    transition-duration: 0.1s;
-    transition-property: background-color, border-color;
-}
-
-.difficulty-badge--clickable:hover {
-    background-color: rgb(235, 233, 228);
-    border-color: rgb(160, 155, 148);
-}
-
 /* ── DIFFICULTY MENU — pill tabs ───────────── */
 .difficulty-menu {
     flex-direction: row;
     background-color: rgb(228, 226, 220);
-    border-radius: 6px;
-    padding: 4px;
-    margin-bottom: 12px;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 25px;
 }
 
 .difficulty-menu__item {
-    font-size: 10px;
-    letter-spacing: 2px;
+    font-size: 24px; 
+    letter-spacing: 3px;
     color: rgb(140, 137, 132);
-    padding: 6px 20px;
-    border-radius: 4px;
+    padding: 15px 40px; 
+    border-radius: 8px;
     -unity-text-align: middle-center;
     transition-duration: 0.15s;
     transition-property: background-color, color;
@@ -341,4 +278,21 @@
 
 .difficulty-menu__item--active:hover {
     background-color: rgb(55, 53, 50);
+}
+
+/* ── TIMER & MISTAKES ──────────────────────── */
+.timer {
+    font-size: 40px; /* Zaman biraz daha büyüdü */
+    color: rgb(120, 117, 112);
+    letter-spacing: 4px;
+    -unity-text-align: upper-center;
+    margin-top: 15px;
+}
+
+.mistakes {
+    font-size: 28px; 
+    color: rgb(180, 80, 70);
+    letter-spacing: 2px;
+    -unity-text-align: upper-center;
+    margin-top: 10px;
 }
