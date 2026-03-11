@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MatrisCreater : MonoBehaviour
 {
-    public SudokuGridBuilder uiBuilder;
+    public GameUI uiBuilder;
 
     List<int> pool;
     int[,] grid;

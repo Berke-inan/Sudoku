@@ -185,6 +185,27 @@
     -unity-text-align: middle-center;
     transition-duration: 0.1s;
     transition-property: background-color, translate;
+    position: relative; 
+    overflow: hidden;
+}
+
+.numpad__badge {
+    position: absolute;
+    bottom: 5px;
+    right: 8px;
+    font-size: 24px;
+    color: rgb(160, 155, 148);
+    -unity-font-style: bold;
+    -unity-text-align: middle-right;
+    /* Tıklamaları engellememesi için */
+    picking-mode: ignore; 
+}
+.numpad__btn--empty {
+    background-color: rgb(235, 233, 228);
+    color: rgb(200, 195, 185);
+}
+.numpad__btn--empty > .numpad__badge {
+    color: rgb(200, 195, 185);
 }
 
 .numpad__btn:hover {
@@ -296,3 +317,71 @@
     -unity-text-align: upper-center;
     margin-top: 10px;
 }
+
+
+/* ── DIALOG SYSTEM (OVERLAY & BOX) ─────────────────────── */
+.dialog-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-box {
+    width: 850px; /* Grid boyutuna (1020px) uyumlu genişlik */
+    background-color: rgb(245, 244, 240);
+    border-radius: 24px;
+    padding: 60px 40px;
+    align-items: center;
+    border-width: 4px;
+    border-color: rgb(210, 207, 200);
+}
+
+.dialog-title {
+    font-size: 55px;
+    color: rgb(40, 38, 35);
+    -unity-font-style: bold;
+    margin-bottom: 30px;
+    -unity-text-align: middle-center;
+}
+
+.dialog-title--danger { color: rgb(200, 50, 40); }
+.dialog-title--success { color: rgb(40, 160, 40); }
+
+.dialog-message {
+    font-size: 36px;
+    color: rgb(80, 78, 74);
+    margin-bottom: 50px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.dialog-button-row {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.dialog-btn {
+    height: 100px;
+    width: 300px;
+    margin: 0 15px;
+    border-radius: 16px;
+    font-size: 32px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    border-width: 0;
+    transition-duration: 0.1s;
+}
+
+.dialog-btn--yes { background-color: rgb(200, 50, 40); color: white; }
+.dialog-btn--yes:hover { background-color: rgb(220, 70, 60); }
+
+.dialog-btn--no { background-color: rgb(180, 175, 165); color: rgb(40, 38, 35); }
+.dialog-btn--no:hover { background-color: rgb(200, 195, 185); }
+
+.dialog-btn--primary { background-color: rgb(40, 38, 35); color: white; width: 450px; }
+.dialog-btn--primary:hover { background-color: rgb(65, 62, 58); }
+
+.dialog-btn--stacked { margin-bottom: 25px; }

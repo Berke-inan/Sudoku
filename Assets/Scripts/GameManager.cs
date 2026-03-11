@@ -1,14 +1,19 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public MatrisCreater matrisCreater;
-    public SudokuGridBuilder uiBuilder;
+    public GameUI uiBuilder;
 
     private int[,] solvedMatris;
     private int[,] puzzleMatris;
+    private int[] remainingNumber = new int[10];
+
+
+
 
     private int mistakes = 0;
     private int remainingHint = 3;
@@ -33,12 +38,12 @@ public class GameManager : MonoBehaviour
 
         matrisCreater.GenerateMatris();
 
+        remainingNumber = new int[10];
+
         solvedMatris = matrisCreater.GetGrid();
 
         CreatePuzzle(difficulty);
 
-
-        uiBuilder.ClearAllCells();
         uiBuilder.LoadMatrixToUI(puzzleMatris);
     }
 
@@ -47,13 +52,13 @@ public class GameManager : MonoBehaviour
         puzzleMatris = new int[9, 9];
         int cellsToRemove = 0;
 
-        if (difficulty == Difficulty.Easy) 
+        if (difficulty == Difficulty.Easy)
             cellsToRemove = 25;
 
-        else if (difficulty == Difficulty.Medium) 
+        else if (difficulty == Difficulty.Medium)
             cellsToRemove = 35;
 
-        else if (difficulty == Difficulty.Hard) 
+        else if (difficulty == Difficulty.Hard)
             cellsToRemove = 45;
 
         for (int r = 0; r < 9; r++)
@@ -61,6 +66,7 @@ public class GameManager : MonoBehaviour
             for (int c = 0; c < 9; c++)
             {
                 puzzleMatris[r, c] = solvedMatris[r, c];
+                
             }
         }
 
@@ -72,17 +78,19 @@ public class GameManager : MonoBehaviour
 
             if (puzzleMatris[r, c] != 0)
             {
+                remainingNumber[puzzleMatris[r, c]] += 1;
                 puzzleMatris[r, c] = 0;
                 removed++;
             }
         }
+        uiBuilder.UpdateRemainingNumbersUI(remainingNumber);
     }
 
     public void GiveHint()
     {
-        while (remainingHint>0)
+        while (remainingHint > 0)
         {
-            
+
             int r = UnityEngine.Random.Range(0, 9);
             int c = UnityEngine.Random.Range(0, 9);
 
@@ -92,6 +100,8 @@ public class GameManager : MonoBehaviour
                 puzzleMatris[r, c] = solvedMatris[r, c];
                 uiBuilder.SetHintCell(r, c, puzzleMatris[r, c]);
                 uiBuilder.UpdateHintUI(remainingHint);
+                remainingNumber[puzzleMatris[r, c]] -= 1;
+                uiBuilder.UpdateRemainingNumbersUI(remainingNumber);
                 CheckWinCondition();
                 return;
             }
@@ -106,13 +116,15 @@ public class GameManager : MonoBehaviour
 
     public void SolvePuzzle()
     {
-        for (int row= 0; row < 9; row++)
+        for (int row = 0; row < 9; row++)
         {
             for (int col = 0; col < 9; col++)
             {
-                if (puzzleMatris[row, col] == 0) 
-                { 
+                if (puzzleMatris[row, col] == 0)
+                {
                     puzzleMatris[row, col] = solvedMatris[row, col];
+                    remainingNumber[puzzleMatris[row, col]] -=1 ;
+                    uiBuilder.UpdateRemainingNumbersUI(remainingNumber);
                     uiBuilder.SetHintCell(row, col, puzzleMatris[row, col]);
                 }
 
@@ -124,6 +136,12 @@ public class GameManager : MonoBehaviour
 
     private void CheckPlayerInput(int index, int number)
     {
+
+        if (remainingNumber[number] <= 0)
+        {
+            return;
+        }
+
         int r = index / 9;
         int c = index % 9;
 
@@ -132,6 +150,8 @@ public class GameManager : MonoBehaviour
             if (solvedMatris[r, c] == number)
             {
                 puzzleMatris[r, c] = number;
+                remainingNumber[number] -=1 ;
+                uiBuilder.UpdateRemainingNumbersUI(remainingNumber);
                 uiBuilder.SetPlayerCell(index, number, false);
                 CheckWinCondition();
             }
@@ -143,21 +163,21 @@ public class GameManager : MonoBehaviour
 
                 if (mistakes == 4)
                 {
-  
+
                     uiBuilder.ShowGameOverDialog();
                 }
             }
         }
     }
 
- 
+
     private void CheckWinCondition()
     {
         for (int r = 0; r < 9; r++)
         {
             for (int c = 0; c < 9; c++)
             {
-              
+
                 if (puzzleMatris[r, c] == 0) return;
             }
         }
