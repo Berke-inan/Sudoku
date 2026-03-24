@@ -149,10 +149,12 @@ namespace Ui
 
         private void OnNewGameClicked()
         {
-            _dialogUI.ShowConfirmation("Are you sure you want to start a new game? Current progress will be lost.", () =>
-            {
-                StartNewGame();
-            });
+            _dialogUI.ShowMessage(
+                "NEW GAME",
+                "Are you sure you want to start a new game? Current progress will be lost.",
+                "YES", StartNewGame,
+                "NO", null
+            );
         }
 
         private void BuildDifficultyMenu()
@@ -200,7 +202,7 @@ namespace Ui
         {
             if (_currentDifficulty == diff) return;
 
-            _dialogUI.ShowConfirmation("Are you sure? Current progress will be lost.", () =>
+            _dialogUI.ShowMessage("WARNING", "Are you sure? Current progress will be lost.", "YES", () =>
             {
                 _currentDifficulty = diff;
                 foreach (var child in _difficultyMenu.Children())
@@ -208,7 +210,7 @@ namespace Ui
 
                 selectedItem?.AddToClassList("difficulty-menu__item--active");
                 OnDifficultyChangedEvent?.Invoke(diff);
-            });
+            }, "NO", null);
         }
 
         private void OnHintOrSolveClicked()
@@ -219,10 +221,10 @@ namespace Ui
             }
             else
             {
-                _dialogUI.ShowConfirmation("Are you sure you want to auto-solve the puzzle?", () =>
+                _dialogUI.ShowMessage("SOLVE PUZZLE", "Are you sure you want to auto-solve the puzzle?", "YES", () =>
                 {
                     gameManager.SolvePuzzle();
-                });
+                }, "NO", null);
             }
         }
 
@@ -236,7 +238,7 @@ namespace Ui
         {
             _isPaused = true;
             _timerRunning = false;
-            _dialogUI.ShowPause(ResumeGame, StartNewGame);
+            _dialogUI.ShowMessage("PAUSED", null, "RESUME", ResumeGame, "RESTART", StartNewGame);
         }
 
         private void ResumeGame()
@@ -289,11 +291,19 @@ namespace Ui
         public void SetPlayerCell(int index, int number, bool isError) => _boardUI.SetPlayerCell(index, number, isError);
         public void SetHintCell(int row, int col, int number) => _boardUI.SetHintCell((row * 9) + col, number);
 
-        public void ShowGameOverDialog() => _dialogUI.ShowGameOver(StartNewGame);
+        public void ShowGameOverDialog()
+        {
+            _dialogUI.ShowMessage("GAME OVER", "You've used all 3 lives. Try again!", "START NEW GAME", StartNewGame);
+        }
+
         public void ShowWinDialog()
         {
             _timerRunning = false;
-            _dialogUI.ShowWin(FormatTime(_elapsedSeconds), StartNewGame);
+            _dialogUI.ShowMessage(
+                "CONGRATULATIONS!",
+                $"You have solved the entire puzzle!\nCompletion Time: {FormatTime(_elapsedSeconds)}",
+                "PLAY AGAIN", StartNewGame
+            );
         }
 
         /// <summary>
